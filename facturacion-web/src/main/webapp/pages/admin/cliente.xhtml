@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:define name="contenido">
+        <p:growl id="menGen"/>
+        <p:toolbar>
+            <p:toolbarGroup align="right">
+                <h:outputLabel value="Administración de Cliente"/>
+            </p:toolbarGroup>
+            <p:toolbarGroup align="left">
+                <p:commandButton icon="pi pi-file" value="Nuevo" onclick="PF('diaNuePac').show();"/>
+                <p:commandButton icon="far fa-edit" value="Editar" process="@this" 
+                                 actionListener="#{clienteBean.editar}"
+                                 update=":frmMen:panGriNuePac menGen"/>
+                <p:commandButton icon="fas fa-trash" value="Eliminar" process="@this"
+                                 onclick="PF('diaConEli').show();"/>
+            </p:toolbarGroup>
+        </p:toolbar>
+        <br></br>
+        <p:panelGrid id="panGriBusPac" columns="3" style="width:100%">
+            <f:facet name="header">
+                <h:outputLabel value="Buscar Cliente"/>
+            </f:facet>
+            <p:outputLabel for="txtIdeApePac" value="Identificacion/Apellido:"/>
+            <p:inputText id="txtIdeApePac" value="#{clienteBean.criterioBusqueda}"
+                         maxlength="25" required="true"/>
+            <p:commandButton icon="fas fa-search" value="Buscar" process="@this txtIdeApePac" 
+                             actionListener="#{clienteBean.buscar}" update="datTabPac menGen"/>
+        </p:panelGrid>
+        <br></br>
+        <p:dataTable id="datTabPac" value="#{clienteBean.lista}" var="pac"
+                     selectionMode="single" rowKey="#{pac.id}" paginator="10"
+                     widgetVar="widDatTabPac">
+
+            <f:facet name="header">
+                <div class="flex justify-content-between align-items-center">
+                    <h:outputLabel value="Lista de Clientes"/>
+
+                    <div>
+                        <p:commandButton id="toggler" type="button" value="Columns" icon="pi pi-align-justify"/>
+                        <p:columnToggler datasource="datTabPac" trigger="toggler">
+                            <p:ajax />
+                        </p:columnToggler>
+                    </div>
+                </div>
+            </f:facet>
+
+            <p:ajax event="rowSelect" listener="#{clienteBean.seleccionarFila}"/>
+
+            <p:column headerText="Identificación" filterBy="#{pac.identificacion}" filterMatchMode="startsWith">
+                <h:outputLabel value="#{pac.identificacion}"/>
+            </p:column>
+            <p:column headerText="Nombres" filterBy="#{pac.nombres}" filterMatchMode="contains">
+                <h:outputLabel value="#{pac.nombres}"/>
+            </p:column>
+            <p:column headerText="Telefono" filterBy="#{pac.telefono}" filterMatchMode="contains">
+                <h:outputLabel value="#{pac.telefono}"/>
+            </p:column>
+            <p:column headerText="Direccion" filterBy="#{pac.direccion}" filterMatchMode="contains">
+                <h:outputLabel value="#{pac.direccion}"/>
+            </p:column>
+            <p:column headerText="Mail" filterBy="#{pac.mail}" filterMatchMode="contains">
+                <h:outputLabel value="#{pac.mail}"/>
+            </p:column>
+
+        </p:dataTable>
+    </ui:define>
+    <ui:define name="mensaje">
+        <p:dialog widgetVar="diaNuePac" header="Gestionar Cliente" width="874px" modal="true">
+            <h:panelGrid id="panGriNuePac" columns="2" style="width:100%">
+      
+                <h:outputText  value="Identificación:"/>           
+                <p:inputText value="#{clienteBean.objeto.identificacion}" style="width:100%"/>
+                <h:outputText  value="Nombres:"/>           
+                <p:inputText value="#{clienteBean.objeto.nombres}" style="width:100%"/>
+                <h:outputText  value="Direccion"/>           
+                <p:inputText value="#{clienteBean.objeto.direccion}" style="width:100%"/>
+                <h:outputText  value="Email"/>           
+                <p:inputText value="#{clienteBean.objeto.mail}" style="width:100%"/>                    
+                <h:outputText  value="Telefono:"/>           
+                <p:inputText value="#{clienteBean.objeto.telefono}" style="width:100%"/>                    
+                <p:outputLabel for="calFecNacPac" value="Fecha Nacimiento:"/>
+                <p:calendar id="calFecNacPac" value="#{clienteBean.objeto.fechaNacimiento}" required="true" pattern="yyyy-MM-dd"/>
+                <p:outputLabel for="graFotPac" value="Foto:"/>
+                <p:graphicImage id="graFotPac" value="#{clienteBean.imagenBinaria ne null ? clienteBean.imagenBinaria: clienteBean.pathImagen}" width="100" cache="false">
+                    <p:ajax event="click" process="@this" update=":frmMen:filUplIma" oncomplete="PF('diaCarIma').show();"/>
+                </p:graphicImage>
+
+            </h:panelGrid>
+            <p:panelGrid columns="2" style="width: 100%">
+                <p:commandButton icon="far fa-save" value="Guardar"  process="@this :frmMen:panGriNuePac"
+                                 actionListener="#{clienteBean.guardar}" update=":frmMen:panGriNuePac datTabPac menGen"
+                                 oncomplete="PF('diaNuePac').hide();"/>
+                <p:commandButton rendered="false" icon="far fa-save" value="Guardar Conv" process="@this :frmMen:panGriNuePac"
+                                 actionListener="#{clienteBean.guardarConvertidor}" update=":frmMen:panGriNuePac datTabPac menGen"
+                                 oncomplete="PF('diaNuePac').hide();"/>
+            </p:panelGrid>
+        </p:dialog>
+
+        <p:confirmDialog widgetVar="diaConEli" header="Confirmación Eliminación" 
+                         message="Está seguro de eliminar el registro?">
+            <p:commandButton value="Si" process="@this txtIdeApePac" actionListener="#{clienteBean.eliminar}"
+                             update="datTabPac menGen" oncomplete="PF('diaConEli').hide();"/>
+            <p:commandButton value="No" process="@this" actionListener="#{clienteBean.resetearFormulario}"
+                             update="datTabPac" oncomplete="PF('diaConEli').hide();"/>
+        </p:confirmDialog>
+
+        <p:dialog widgetVar="diaCarIma" header="Cargar Imagen" width="780">
+            <p:fileUpload id="filUplIma" listener="#{clienteBean.subirImagen}" mode="advanced" dragDropSupport="false"
+                          update=":frmMen:graFotPac menGen" sizeLimit="500000" fileLimit="1" 
+                          allowTypes="/(\.|\/)(jpe?g|png)$/" oncomplete="PF('diaCarIma').hide();"/>
+        </p:dialog>
+    </ui:define>
+
+</ui:composition>
