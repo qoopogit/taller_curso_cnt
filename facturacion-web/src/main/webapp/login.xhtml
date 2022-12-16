@@ -21,21 +21,12 @@
 
                     <div>
                         <label for="txtNomUsu" class="block text-900 font-medium mb-2">Usuario:</label>
-                        <p:inputText id="txtNomUsu" value="#{loginBean.usuario.nombreUsu}" styleClass="w-full mb-3"/>
+                        <p:inputText id="txtNomUsu" value="#{indexBean.txtNomUsu}" styleClass="w-full mb-3"/>
 
                         <label for="txtClaUsu" class="block text-900 font-medium mb-2">Clave:</label>
-                        <p:password id="txtClaUsu" value="#{loginBean.usuario.claveUsu}" toggleMask="true" redisplay="true" styleClass="w-full mb-3"/>
-
-                        <div class="flex align-items-center justify-content-between mb-6">
-                            <div class="flex align-items-center">
-                                <p:selectBooleanCheckbox id="rememberme" styleClass="mr-2"/>
-                                <label for="rememberme">Recordar</label>
-                            </div>
-                            <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Olvidaste tu clave?</a>
-                        </div>
-
+                        <p:password id="txtClaUsu" value="#{indexBean.txtClaUsu}" toggleMask="true" redisplay="true" styleClass="w-full mb-3"/>
                         <p:commandButton value="Ingresar" icon="pi pi-user" styleClass="w-full"
-                                         process="@this txtNomUsu txtClaUsu" actionListener="#{loginBean.validarUsuario}"
+                                         process="@this txtNomUsu txtClaUsu" actionListener="#{indexBean.validarUsuario}"
                                          update="menGen"/>
                     </div>
                 </div>

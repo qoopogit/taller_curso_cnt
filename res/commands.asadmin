@@ -1,0 +1,2 @@
+ create-jdbc-connection-pool --datasourceclassname org.postgresql.ds.PGSimpleDataSource --restype javax.sql.DataSource --property user=${ENV=DB_USER}:password=${ENV=DB_PASSWORD}:DatabaseName=${ENV=DB_DATABASE}:ServerName=${ENV=DB_HOST}:port=${ENV=DB_PORT} --lazyconnectionassociation=false --lazyconnectionenlistment=false   otp-pool
+ create-jdbc-resource --connectionpoolid otp-pool jdbc/__facturacion
