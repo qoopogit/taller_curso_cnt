@@ -2,17 +2,12 @@ version: "3.7"
 #Levanta un ambiente de funcional de Qoopo con una base nueva
 
 services:
-#Base de Datos    
-    db:
-        image: postgres:14
-        environment:
-            POSTGRES_PASSWORD: facturacion
-            POSTGRES_USER: facturacion
-            POSTGRES_DB: facturacion
-
+#Base de Datos   
     qoopo-facturacion-ear:
         image: qoopo/facturacion-ear:1.0
         build: ./
+        depends_on:
+          - db
         ports:
             - 6060:8080
         environment:
@@ -21,3 +16,10 @@ services:
             DB_USER: facturacion
             DB_PASSWORD: facturacion
             DB_PORT: 5432
+
+    db:
+        image: postgres:14
+        environment:
+            POSTGRES_PASSWORD: facturacion
+            POSTGRES_USER: facturacion
+            POSTGRES_DB: facturacion
