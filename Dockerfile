@@ -10,7 +10,7 @@ EXPOSE 8080 4848
 
 USER payara
 ENV DB_HOST=localhost
-ENV DB_PORT=1521
+ENV DB_PORT=5432
 ENV DB_DATABASE=facturacion
 ENV DB_USER=facturacion
 ENV DB_PASSWORD=facturacion

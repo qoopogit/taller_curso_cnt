@@ -104,7 +104,7 @@ public class ClienteBean extends AbstractManagedBean implements Serializable {
     public void getId() {
         try {
             if (objeto.getId() != null) {
-                adminPaciente.actualizar(objeto);                
+                adminPaciente.actualizar(objeto);
             } else {
                 adminPaciente.guardar(objeto);
             }
@@ -129,11 +129,15 @@ public class ClienteBean extends AbstractManagedBean implements Serializable {
      */
     public void editar() {
         if (seleccionado != null) {
-            this.objeto = seleccionado;          
+            this.objeto = seleccionado;
 
-            //Actuaizar Imagen
-            InputStream fis = new ByteArrayInputStream(objeto.getFoto());
-            imagenBinaria = DefaultStreamedContent.builder().stream(() -> fis).build();
+            // Actuaizar Imagen
+            try {
+                InputStream fis = new ByteArrayInputStream(objeto.getFoto());
+                imagenBinaria = DefaultStreamedContent.builder().stream(() -> fis).build();
+            } catch (Exception e) {
+
+            }
             PrimeFaces.current().executeScript("PF('diaNuePac').show();");
         } else {
             anadirError("Se debe seleccionar un paciente");
@@ -174,7 +178,7 @@ public class ClienteBean extends AbstractManagedBean implements Serializable {
 
     @PostConstruct
     public void inicializar() {
-//        cargarTipoPacientes();
+        // cargarTipoPacientes();
     }
 
 }
